@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Check Live Token</title>
+    <link rel="icon" type="image/svg+xml" href="/facebook.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" integrity="sha512-ADrqa2PY1TZtb/MoLZIZu/Z/LlPaWQeDMBV73EMwjGam43/JJ5fqW38Rq8LJOVGCDfrJeOMS3Q/wRUVzW5DkjQ==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Check Live Facebook Token</h1>
+      <p class="subtitle">Facebook token checker written in pure javascript.</p>
+      <div class="field">
+        <label class="label">Input token:</label>
+        <div class="control">
+          <textarea id='input' class="textarea" placeholder="Input your token here" data-gramm_editor="false" spellcheck="false" autocomplete="off"></textarea>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="button is-primary" onclick="scan()">Check</button>
+        <button class="button" onclick="reset()">Reset</button>
+      </div>
+      <div class="field">
+        <label class="label"><span id="live-count" class="tag is-success">Live token: </span></label>
+        <div class="control">
+          <textarea id='live' class="textarea is-success" data-gramm_editor="false" spellcheck="false" autocomplete="off" readonly></textarea>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="button clipboard-btn" data-clipboard-target="#live">Copy to clipboard</button>
+      </div>
+      <div class="field">
+        <label class="label"><span id="expire-count" class="tag is-danger">Expire token: </span></label>
+        <div class="control">
+          <textarea id='expire' class="textarea is-danger" data-gramm_editor="false" spellcheck="false" autocomplete="off" readonly></textarea>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="button clipboard-btn" data-clipboard-target="#expire">Copy to clipboard</button>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Check Live Token</strong> by <a href="https://www.facebook.com/QuynhVir">Quynh Vir</a>. The source code is licensed
+        <a href="https://github.com/QuynhVir/Check-Live-Token/blob/master/LICENSE">MIT</a>.
+      </p>
+    </div>
+  </footer>
+  <script type="text/javascript">
+    new ClipboardJS('.clipboard-btn')
+    const scan = async () => {
+      let live = 0
+      let expire = 0
+      document.getElementById('input').value.replace('\r', '').split('\n').filter(item => item.length > 0).map(line => {
+        const token = /EA[\w]{180,210}/.exec(line.trim())[0]
+        fetch(`https://graph.facebook.com/v8.0/me?access_token=${token}`)
+          .then(response => response.json())
+          .then(data => {
+            if(Object.prototype.hasOwnProperty.call(data, 'id')) {
+              document.getElementById('live').value = document.getElementById('live').value + line.trim() + '\n'
+              document.getElementById('live-count').innerHTML = `Live token: ${++live}`
+            } else {
+              document.getElementById('expire').value = document.getElementById('expire').value + line.trim() + '\n'
+              document.getElementById('expire-count').innerHTML = `Expire token: ${++expire}`
+            }
+          })
+      })
+    }
+    const reset = () => {
+      document.getElementById('input').value = ''
+      document.getElementById('live').value = ''
+      document.getElementById('expire').value = ''
+      document.getElementById('live-count').innerHTML = 'Live token:'
+      document.getElementById('expire-count').innerHTML = 'Expire token:'
+    }
+  </script>
+  </body>
+</html>
