@@ -14,7 +14,17 @@
       <h1 class="title">Check Live Facebook Token</h1>
       <p class="subtitle">Facebook token checker written in pure javascript.</p>
       <div class="field">
-        <label class="label">Input token:</label>
+        <div class="columns">
+          <div class="column">
+            <label class="label">Input token:</label>
+          </div>
+          <div class="column">
+            <label class="checkbox">
+              <input id="checkbox" type="checkbox">
+              I just want access_token
+            </label>
+          </div>
+        </div>
         <div class="control">
           <textarea id='input' class="textarea" placeholder="Input your token here" data-gramm_editor="false" spellcheck="false" autocomplete="off"></textarea>
         </div>
@@ -54,6 +64,7 @@
   <script type="text/javascript">
     new ClipboardJS('.clipboard-btn')
     const scan = async () => {
+      console.log(document.getElementById('checkbox').checked)
       let live = 0
       let expire = 0
       document.getElementById('input').value.replace('\r', '').split('\n').filter(item => item.length > 0).map(line => {
@@ -62,10 +73,18 @@
           .then(response => response.json())
           .then(data => {
             if(Object.prototype.hasOwnProperty.call(data, 'id')) {
-              document.getElementById('live').value = document.getElementById('live').value + line.trim() + '\n'
+              if (document.getElementById('checkbox').checked) {
+                document.getElementById('live').value = document.getElementById('live').value + token + '\n'
+              } else {
+                document.getElementById('live').value = document.getElementById('live').value + line.trim() + '\n'
+              }
               document.getElementById('live-count').innerHTML = `Live token: ${++live}`
             } else {
-              document.getElementById('expire').value = document.getElementById('expire').value + line.trim() + '\n'
+              if (document.getElementById('checkbox').checked) {
+                document.getElementById('expire').value = document.getElementById('expire').value + token + '\n'
+              } else {
+                document.getElementById('expire').value = document.getElementById('expire').value + line.trim() + '\n'
+              }
               document.getElementById('expire-count').innerHTML = `Expire token: ${++expire}`
             }
           })
