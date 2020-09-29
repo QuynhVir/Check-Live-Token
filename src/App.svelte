@@ -23,7 +23,7 @@
       .split("\n")
       .filter((item) => item.length > 0)
       .map((line) => {
-        const token = /EA[\w]{180,210}/.exec(line.trim())[0]
+        const token = /EA[\w]{170,210}/.exec(line.trim())[0]
         fetch(`https://graph.facebook.com/v8.0/me?access_token=${token}`)
           .then((response) => response.json())
           .then((data) => {
@@ -41,6 +41,7 @@
                 expiredTokens = expiredTokens + line.trim() + "\n"
               }
               expireCount++
+              console.log(expireCount)
             }
           })
       })
@@ -72,7 +73,8 @@
               <input
                 id="checkbox"
                 type="checkbox"
-                bind:checked={accessTokenOnly} /> I just want access_token
+                bind:checked={accessTokenOnly} />
+              I just want access_token
             </label>
           </div>
         </div>
@@ -107,9 +109,8 @@
         </div>
       </div>
       <div class="buttons">
-        <button
-          class="button clipboard-btn"
-          on:click={() => copy(liveTokens)}>Copy to clipboard</button>
+        <button class="button" on:click={() => copy(liveTokens)}>Copy to
+          clipboard</button>
       </div>
       <div class="field">
         <label class="label" for="expire-token">
@@ -128,18 +129,19 @@
         </div>
       </div>
       <div class="buttons">
-        <button
-          class="button clipboard-btn"
-          on:click={() => copy(expiredTokens)}>Copy to clipboard</button>
+        <button class="button" on:click={() => copy(expiredTokens)}>Copy to
+          clipboard</button>
       </div>
     </div>
   </section>
   <footer class="footer">
     <div class="content has-text-centered">
       <p>
-        <strong>Check Live Token</strong> by <a
-          href="https://www.facebook.com/QuynhVir">Quynh Vir</a>. The source
-        code is licensed <a
+        <strong>Check Live Token</strong>
+        by
+        <a href="https://www.facebook.com/QuynhVir">Quynh Vir</a>. The source
+        code is licensed
+        <a
           href="https://github.com/QuynhVir/Check-Live-Token/blob/master/LICENSE">MIT</a>.
       </p>
     </div>
