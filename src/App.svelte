@@ -41,7 +41,6 @@
                 expiredTokens = expiredTokens + line.trim() + "\n"
               }
               expireCount++
-              console.log(expireCount)
             }
           })
       })
