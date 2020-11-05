@@ -55,6 +55,12 @@
   }
 </script>
 
+<style>
+  .button {
+    height: 1.5em;
+  }
+</style>
+
 <Bulma />
 <main>
   <section class="section">
