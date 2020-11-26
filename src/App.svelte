@@ -19,8 +19,7 @@
 
   const scan = async () => {
     inputTokens
-      .replace("\r", "")
-      .split("\n")
+      .split(/\r?\n/)
       .filter((item) => item.length > 0)
       .map((line) => {
         const token = /EA[\w]{170,210}/.exec(line.trim())[0]
