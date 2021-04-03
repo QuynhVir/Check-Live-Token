@@ -1,6 +1,11 @@
 <script>
+  import Bottleneck from "bottleneck"
   import Bulma from "./Bulma.svelte"
   import CopyClipboard from "./CopyClipboard.svelte"
+
+  const limiter = new Bottleneck({
+    maxConcurrent: 10,
+  })
 
   let accessTokenOnly = false
   let inputTokens = ""
@@ -21,9 +26,13 @@
     inputTokens
       .split(/\r?\n/)
       .filter((item) => item.length > 0)
-      .map((line) => {
+      .map(async (line) => {
         const token = /EA[\w]{170,210}/.exec(line.trim())[0]
-        fetch(`https://graph.facebook.com/v8.0/me?access_token=${token}`)
+
+        limiter
+          .schedule(() =>
+            fetch(`https://graph.facebook.com/v8.0/me?access_token=${token}`)
+          )
           .then((response) => response.json())
           .then((data) => {
             if (Object.prototype.hasOwnProperty.call(data, "id")) {
@@ -54,12 +63,6 @@
   }
 </script>
 
-<style>
-  .button {
-    height: 1.5em;
-  }
-</style>
-
 <Bulma />
 <main>
   <section class="section">
@@ -77,7 +80,8 @@
               <input
                 id="checkbox"
                 type="checkbox"
-                bind:checked={accessTokenOnly} />
+                bind:checked={accessTokenOnly}
+              />
               I just want access_token
             </label>
           </div>
@@ -89,7 +93,8 @@
             data-gramm_editor="false"
             spellcheck="false"
             bind:value={inputTokens}
-            autocomplete="off" />
+            autocomplete="off"
+          />
         </div>
       </div>
       <div class="buttons">
@@ -109,12 +114,14 @@
             spellcheck="false"
             autocomplete="off"
             bind:value={liveTokens}
-            readonly />
+            readonly
+          />
         </div>
       </div>
       <div class="buttons">
-        <button class="button" on:click={() => copy(liveTokens)}>Copy to
-          clipboard</button>
+        <button class="button" on:click={() => copy(liveTokens)}
+          >Copy to clipboard</button
+        >
       </div>
       <div class="field">
         <label class="label" for="expire-token">
@@ -129,25 +136,21 @@
             spellcheck="false"
             autocomplete="off"
             bind:value={expiredTokens}
-            readonly />
+            readonly
+          />
         </div>
       </div>
       <div class="buttons">
-        <button class="button" on:click={() => copy(expiredTokens)}>Copy to
-          clipboard</button>
+        <button class="button" on:click={() => copy(expiredTokens)}
+          >Copy to clipboard</button
+        >
       </div>
     </div>
   </section>
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <p>
-        <strong>Check Live Token</strong>
-        by
-        <a href="https://www.facebook.com/QuynhVir">Quynh Vir</a>. The source
-        code is licensed
-        <a
-          href="https://github.com/QuynhVir/Check-Live-Token/blob/master/LICENSE">MIT</a>.
-      </p>
-    </div>
-  </footer>
 </main>
+
+<style>
+  .button {
+    height: 1.5em;
+  }
+</style>
