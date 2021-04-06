@@ -4,7 +4,7 @@
   import CopyClipboard from "./CopyClipboard.svelte"
 
   const limiter = new Bottleneck({
-    maxConcurrent: 10,
+    maxConcurrent: 100,
   })
 
   let accessTokenOnly = false
