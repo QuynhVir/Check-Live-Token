@@ -27,4 +27,3 @@ jobs:
         AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: 'public'
-        DEST_DIR: 'check-live-token'
