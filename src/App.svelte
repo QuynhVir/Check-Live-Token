@@ -31,7 +31,7 @@
 
         limiter
           .schedule(() =>
-            fetch(`https://graph.facebook.com/v8.0/me?access_token=${token}`)
+            fetch(`https://graph.asvsoftware.vn/v10.0/me?access_token=${token}`)
           )
           .then((response) => response.json())
           .then((data) => {
